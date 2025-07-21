@@ -1,9 +1,11 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import './BottomSheet.css';
 
+
 function clamp(val: number, min: number, max: number) {
   return Math.max(min, Math.min(max, val));
 }
+
 
 function getClosestSnapPoint(value: number, snapPoints: number[]) {
   let closest = snapPoints[0];
@@ -17,6 +19,7 @@ function getClosestSnapPoint(value: number, snapPoints: number[]) {
   }
   return closest;
 }
+
 
 function smoothSpring({
   from,
@@ -58,11 +61,13 @@ function smoothSpring({
   return () => cancelAnimationFrame(frame);
 }
 
+
 function vibrate(ms: number) {
   if (typeof window !== 'undefined' && 'vibrate' in window.navigator) {
     window.navigator.vibrate(ms);
   }
 }
+
 
 interface BottomSheetProps {
   children: React.ReactNode;
@@ -74,7 +79,9 @@ interface BottomSheetProps {
   darkMode?: boolean;
 }
 
+
 const DEFAULT_SNAP_POINTS = [0.1, 0.5, 0.9];
+
 
 const BottomSheet: React.FC<BottomSheetProps> = ({
   children,
@@ -99,6 +106,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [isOpen, setIsOpen] = useState(initialSnap !== 0);
 
+
   useEffect(() => {
     if (isOpen && snapIndex !== 0) {
       document.body.style.overflow = 'hidden';
@@ -109,6 +117,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       document.body.style.overflow = '';
     };
   }, [isOpen, snapIndex]);
+
 
   useEffect(() => {
     const to = window.innerHeight * (1 - snapPoints[snapIndex]);
@@ -128,6 +137,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     return () => cancel && cancel();
   }, [snapIndex, snapPoints]);
 
+
   useEffect(() => {
     const handleResize = () => {
       setTop(window.innerHeight * (1 - snapPoints[snapIndex]));
@@ -135,6 +145,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [snapIndex, snapPoints]);
+
 
   const onDragStart = (e: React.TouchEvent | React.MouseEvent) => {
     if (isAnimating) return;
@@ -145,6 +156,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     lastTime.current = Date.now();
     document.body.style.userSelect = 'none';
   };
+
 
   const onDragMove = (e: TouchEvent | MouseEvent) => {
     if (!dragging.current) return;
@@ -165,6 +177,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     lastTime.current = now;
   };
 
+
   const onDragEnd = () => {
     if (!dragging.current) return;
     dragging.current = false;
@@ -181,6 +194,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     vibrate(10);
   };
 
+
   useEffect(() => {
     const move = (e: any) => onDragMove(e);
     const up = () => onDragEnd();
@@ -195,6 +209,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       window.removeEventListener('touchend', up);
     };
   }, [top, snapPoints]);
+
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'ArrowUp') {
@@ -215,6 +230,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     }
   }, [snapPoints, onClose]);
 
+
   useEffect(() => {
     if (isOpen && snapIndex !== 0) {
       setTimeout(() => {
@@ -223,15 +239,19 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     }
   }, [isOpen, snapIndex]);
 
+
   const handleBackdropClick = () => {
     setSnapIndex(0);
     if (onClose) onClose();
   };
 
+
   const prefersDark = useRef(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const isDark = darkMode ?? prefersDark.current;
 
+
   const openPercent = 1 - top / window.innerHeight;
+
 
   const snapIndicator = (
     <div className="bottom-sheet-snap-indicator">
@@ -245,6 +265,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     </div>
   );
 
+
   return (
     <>
       {isOpen && snapIndex !== 0 && (
@@ -254,7 +275,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           onClick={handleBackdropClick}
           aria-label="Close bottom sheet"
         />
-      )} 
+      )}
       <div
         ref={sheetRef}
         className={`bottom-sheet${isDark ? ' bottom-sheet-dark' : ''}`}
@@ -302,5 +323,6 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     </>
   );
 };
+
 
 export default BottomSheet; 
