@@ -27,30 +27,20 @@ function smoothSpring({
   velocity,
   set,
   onRest,
-  stiffness = 0.12,
-  damping = 0.85,
-  mass = 1,
 }: {
   from: number;
   to: number;
   velocity: number;
   set: (v: number) => void;
   onRest: () => void;
-  stiffness?: number;
-  damping?: number;
-  mass?: number;
 }) {
   let current = from;
-  let v = velocity;
   let frame: number;
   function animate() {
-    const dt = 1;
-    const force = -stiffness * (current - to);
-    const acc = force / mass;
-    v = damping * (v + acc * dt);
-    current += v * dt;
+    // Linear interpolation (no bounce)
+    current += (to - current) * 0.25;
     set(current);
-    if (Math.abs(v) < 0.2 && Math.abs(to - current) < 0.5) {
+    if (Math.abs(to - current) < 0.5) {
       set(to);
       onRest();
       return;
@@ -165,11 +155,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     const minTop = window.innerHeight * (1 - snapPoints[snapPoints.length - 1]);
     const maxTop = window.innerHeight * (1 - snapPoints[0]);
     let newTop = startTop.current + delta;
-    if (newTop < minTop) {
-      newTop = minTop - Math.sqrt(minTop - newTop) * 2;
-    } else if (newTop > maxTop) {
-      newTop = maxTop + Math.sqrt(newTop - maxTop) * 2;
-    }
+    // Remove elasticity: strictly clamp to min/max
+    newTop = clamp(newTop, minTop, maxTop);
     setTop(newTop);
     const now = Date.now();
     velocity.current = (clientY - lastY.current) / (now - lastTime.current + 1);
