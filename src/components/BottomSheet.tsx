@@ -254,7 +254,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           onClick={handleBackdropClick}
           aria-label="Close bottom sheet"
         />
-      )}
+      )} 
       <div
         ref={sheetRef}
         className={`bottom-sheet${isDark ? ' bottom-sheet-dark' : ''}`}
