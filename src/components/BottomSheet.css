@@ -15,7 +15,7 @@
   will-change: top, box-shadow, backdrop-filter;
 }
 
-.bottom-sheet-handle {
+.bottom-sheet-handle { 
   width: 100%;
   padding: 18px 0 10px 0;
   cursor: grab;
