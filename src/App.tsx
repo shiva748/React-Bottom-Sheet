@@ -2,13 +2,23 @@ import React, { useState } from 'react';
 import './App.css';
 import BottomSheet from './components/BottomSheet.tsx';
 
+const features = [
+  { icon: '🟦', title: 'Multiple Snap Points', desc: 'Closed, half, open, and custom positions.' },
+  { icon: '🌀', title: 'Smooth Animation', desc: 'Custom spring/linear motion, no libraries.' },
+  { icon: '🖐️', title: 'Drag & Flick', desc: 'Drag or flick to snap, with momentum.' },
+  { icon: '🔘', title: 'Snap Controls', desc: 'Buttons and indicator for snap points.' },
+  { icon: '🌗', title: 'Light/Dark Mode', desc: 'Toggle between light and dark themes.' },
+  { icon: '🛡️', title: 'Accessibility', desc: 'Keyboard, focus trap, ESC to close.' },
+  { icon: '📱', title: 'Responsive', desc: 'Works on desktop and mobile.' },
+  { icon: '🔒', title: 'No 3rd-Party Anim', desc: 'All animation is custom-coded.' },
+];
+
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>React Bottom Sheet Demo</h1>
+      <header className="App-header" style={{paddingBottom: 0}}>
         <button
           style={{
             position: 'absolute',
@@ -30,10 +40,15 @@ function App() {
         >
           {darkMode ? '🌙 Dark' : '☀️ Light'}
         </button>
-        <p>
-          Drag the handle or use the buttons to move the bottom sheet.<br />
-          Try on desktop and mobile!
-        </p>
+        <div className="feature-tiles">
+          {features.map((f, i) => (
+            <div className="feature-tile" key={i}>
+              <div className="feature-icon">{f.icon}</div>
+              <div className="feature-title">{f.title}</div>
+              <div className="feature-desc">{f.desc}</div>
+            </div>
+          ))}
+        </div>
       </header>
       <BottomSheet
         snapPoints={[0.05, 0.3, 0.6, 0.92]}
