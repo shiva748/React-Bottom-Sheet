@@ -250,7 +250,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   const isDark = darkMode ?? prefersDark.current;
 
 
-  const openPercent = 1 - top / window.innerHeight;
+  const openPercent = 1 - top / window.innerHeight; 
 
 
   const snapIndicator = (
